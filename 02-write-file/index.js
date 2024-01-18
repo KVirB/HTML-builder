@@ -5,16 +5,6 @@ const readline = require('readline');
 const dirname = path.join(__dirname, '02-write-file.txt');
 const file = fs.createWriteStream(dirname);
 const rl = readline.createInterface(process.stdin, process.stdout);
-rl.on('SIGINT', () => {
-  rl.question('Вы уверены, что хотите выйти? (yes/no) ', (answer) => {
-    if (answer === 'yes') {
-      console.log('Программа была остановлена, Удачи!');
-      rl.close();
-    } else {
-      console.log('Программа продолжается.');
-    }
-  });
-});
 
 const askQuestion = () => {
   rl.question('Привет, введи текст для сохранения в файл: ', (answer) => {
@@ -28,9 +18,9 @@ const askQuestion = () => {
   });
 };
 
-askQuestion();
+rl.on('SIGINT', () => {
+  console.log('\nПрограмма была остановлена, Удачи!');
+  rl.close();
+});
 
-// rl.on('SIGINT', () => {
-//   console.log('\nПрограмма была остановлена, Удачи!');
-//   rl.close();
-// });
+askQuestion();
