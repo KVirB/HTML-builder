@@ -18,9 +18,9 @@ fs.readdir(dirname, { withFileTypes: true }, (err, files) => {
           return;
         }
         console.log(
-          `${file.name} - ${path.extname(file.name).replace('.', '')} - ${
-            stat.size / 1000
-          }kb`,
+          `${file.name.split('.')[0]} - ${path
+            .extname(file.name)
+            .replace('.', '')} - ${stat.size / 1000}kb`,
         );
       });
     }
