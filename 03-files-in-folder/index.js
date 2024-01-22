@@ -11,7 +11,18 @@ fs.readdir(dirname, { withFileTypes: true }, (err, files) => {
 
   files.forEach((file) => {
     if (file.isFile()) {
-      console.log(`${file.name} - ${path.extname(file.name)}`);
+      const filePath = path.join(dirname, file.name);
+      fs.stat(filePath, (err, stat) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log(
+          `${file.name} - ${path.extname(file.name).replace('.', '')} - ${
+            stat.size / 1000
+          }kb`,
+        );
+      });
     }
   });
 });
