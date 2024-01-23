@@ -15,27 +15,30 @@ fs.stat(dirnameCopy, (err) => {
   }
 });
 
-fs.readdir(dirnameCopy, (err, files) => {
+fs.readdir(dirname, (err, copyFiles) => {
   if (err) {
     console.error(err);
   }
-  files.forEach((file) => {
-    fs.unlink(path.join(dirnameCopy, file), (err) => {
+
+  copyFiles.forEach((copyFile) => {
+    fs.readdir(dirnameCopy, (err, oldFiles) => {
       if (err) {
         console.error(err);
       }
-    });
-  });
-});
 
-fs.readdir(dirname, (err, files) => {
-  if (err) {
-    console.error(err);
-  }
-  files.forEach((file) => {
+      oldFiles.forEach((oldFile) => {
+        if (!copyFiles.includes(oldFile)) {
+          fs.unlink(path.join(dirnameCopy, oldFile), (err) => {
+            if (err) {
+              console.error(err);
+            }
+          });
+        }
+      });
+    });
     fs.copyFile(
-      `${__dirname}/files/${file}`,
-      `${__dirname}/files-copy/${file}`,
+      `${__dirname}/files/${copyFile}`,
+      `${__dirname}/files-copy/${copyFile}`,
       (err) => {
         if (err) {
           console.error(err);
