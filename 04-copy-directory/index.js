@@ -15,6 +15,19 @@ fs.stat(dirnameCopy, (err) => {
   }
 });
 
+fs.readdir(dirnameCopy, (err, files) => {
+  if (err) {
+    console.error(err);
+  }
+  files.forEach((file) => {
+    fs.unlink(path.join(dirnameCopy, file), (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  });
+});
+
 fs.readdir(dirname, (err, files) => {
   if (err) {
     console.error(err);
