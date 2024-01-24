@@ -5,6 +5,8 @@ const dirnameDist = path.join(__dirname, 'project-dist');
 const dirnameStyle = path.join(dirnameDist, 'style.css');
 const dirnameStyles = path.join(__dirname, 'styles');
 const dirnameComponents = path.join(__dirname, 'components');
+const dirnameAssets = path.join(__dirname, 'assets');
+const dirnameAssetsCopy = path.join(dirnameDist, 'assets');
 
 fs.stat(dirnameDist, (err) => {
   if (err) {
@@ -15,6 +17,31 @@ fs.stat(dirnameDist, (err) => {
       console.log('Created directory files-copy');
     });
   }
+
+  function copyFolder(assets, assetsCopy) {
+    fs.mkdir(assetsCopy, { recursive: true }, (err) => {
+      if (err) throw err;
+
+      fs.readdir(assets, { withFileTypes: true }, (err, files) => {
+        if (err) throw err;
+
+        files.forEach((file) => {
+          const assetsDir = path.join(assets, file.name);
+          const assetsCopyDir = path.join(assetsCopy, file.name);
+
+          if (file.isDirectory()) {
+            copyFolder(assetsDir, assetsCopyDir);
+          } else {
+            fs.copyFile(assetsDir, assetsCopyDir, (err) => {
+              if (err) throw err;
+            });
+          }
+        });
+      });
+    });
+  }
+
+  copyFolder(dirnameAssets, dirnameAssetsCopy);
 
   const styleFiles = fs.createWriteStream(dirnameStyle);
   fs.readdir(dirnameStyles, (err, styles) => {
